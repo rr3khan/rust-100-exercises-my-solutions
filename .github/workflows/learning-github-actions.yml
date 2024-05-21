@@ -1,13 +1,9 @@
-name: learn-github-actions
-run-name: ${{ github.actor }} is learning GitHub Actions
+name: learning-rust-tests
 on: [push]
 jobs:
-  check-bats-version:
+  cargo-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - run: npm install -g bats
-      - run: bats -v
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - run: cargo test
