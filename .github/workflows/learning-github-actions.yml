@@ -8,3 +8,4 @@ jobs:
       - uses: actions-rust-lang/setup-rust-toolchain@v1
       - run: cargo install --locked workshop-runner
       - run: echo 'y' | wr
+      - run: echo 'y' | wr
