@@ -11,3 +11,21 @@
 // Integration here has a very specific meaning: they test **the public API** of your project.
 // You'll need to pay attention to the visibility of your types and methods; integration
 // tests can't access private or `pub(crate)` items.
+
+pub struct Order {
+    product_name: String,
+    quantity: usize,
+    unit_price: usize,
+}
+
+impl Order {
+    pub fn new(product_name: String, quantity: usize, unit_price: usize) -> Order {
+        Order {
+            product_name,
+            quantity,
+            unit_price,
+        }
+    }
+
+  
+}
