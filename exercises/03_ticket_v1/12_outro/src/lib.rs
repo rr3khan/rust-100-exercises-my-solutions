@@ -27,5 +27,21 @@ impl Order {
         }
     }
 
-  
+    // Getters
+
+    pub fn product_name(&self) -> &String {
+        &self.product_name
+    }
+
+    pub fn quantity(&self) -> &usize {
+        &self.quantity
+    }
+
+    pub fn unit_price(&self) -> &usize {
+        &self.unit_price
+    }
+
+    pub fn total(&self) -> usize {
+        &self.unit_price * &self.quantity
+    }
 }
