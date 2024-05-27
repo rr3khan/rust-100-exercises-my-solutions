@@ -20,6 +20,10 @@ pub struct Order {
 
 impl Order {
     pub fn new(product_name: String, quantity: usize, unit_price: usize) -> Order {
+        Self::validate_product_name(&product_name);
+        Self::validate_quantity(&quantity);
+        Self::validate_unit_price(&unit_price);
+
         Order {
             product_name,
             quantity,
@@ -48,14 +52,40 @@ impl Order {
     // Setters
 
     pub fn set_product_name(&mut self, product_name: String) {
+        Self::validate_product_name(&product_name);
         self.product_name = product_name;
     }
 
     pub fn set_quantity(&mut self, quantity: usize) {
+        Self::validate_quantity(&quantity);
         self.quantity = quantity;
     }
 
     pub fn set_unit_price(&mut self, unit_price: usize) {
+        Self::validate_unit_price(&unit_price);
         self.unit_price = unit_price;
+    }
+
+    // Validators
+
+    pub fn validate_product_name(product_name: &String) {
+        if product_name.len() > 300 {
+            panic!("Product name cannot be greater than 300 characters!");
+        }
+        if product_name.is_empty() {
+            panic!("Product name cannot be empty");
+        }
+    }
+
+    pub fn validate_quantity(quantity: &usize) {
+        if *quantity < 1 {
+            panic!("Quantiy cannot be less than 1!");
+        }
+    }
+
+    pub fn validate_unit_price(unit_price: &usize) {
+        if *unit_price < 1 {
+            panic!("Unit Price cannot be less than 1!");
+        }
     }
 }
