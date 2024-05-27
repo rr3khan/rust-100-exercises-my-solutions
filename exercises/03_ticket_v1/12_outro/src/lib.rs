@@ -44,4 +44,18 @@ impl Order {
     pub fn total(&self) -> usize {
         &self.unit_price * &self.quantity
     }
+
+    // Setters
+
+    pub fn set_product_name(&mut self, product_name: String) {
+        self.product_name = product_name;
+    }
+
+    pub fn set_quantity(&mut self, quantity: usize) {
+        self.quantity = quantity;
+    }
+
+    pub fn set_unit_price(&mut self, unit_price: usize) {
+        self.unit_price = unit_price;
+    }
 }
