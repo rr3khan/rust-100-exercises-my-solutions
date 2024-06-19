@@ -1,4 +1,4 @@
-// TODO: Convert the `Ticket::new` method to return a `Result` instead of panicking.
+//   Convert the `Ticket::new` method to return a `Result` instead of panicking.
 //   Use `String` as the error type.
 
 #[derive(Debug, PartialEq)]
@@ -16,25 +16,25 @@ enum Status {
 }
 
 impl Ticket {
-    pub fn new(title: String, description: String, status: Status) -> Ticket {
+    pub fn new(title: String, description: String, status: Status) -> Result<Ticket, String> {
         if title.is_empty() {
-            panic!("Title cannot be empty");
+            return Err("Title cannot be empty".to_string());
         }
         if title.len() > 50 {
-            panic!("Title cannot be longer than 50 characters");
+            return Err("Title cannot be longer than 50 bytes".to_string());
         }
         if description.is_empty() {
-            panic!("Description cannot be empty");
+            return Err("Description cannot be empty".to_string());
         }
         if description.len() > 500 {
-            panic!("Description cannot be longer than 500 characters");
+            return Err("Description cannot be longer than 500 bytes".to_string());
         }
 
-        Ticket {
+        Ok(Ticket {
             title,
             description,
             status,
-        }
+        })
     }
 }
 
@@ -59,13 +59,13 @@ mod tests {
     fn title_cannot_be_longer_than_fifty_chars() {
         let error =
             Ticket::new(overly_long_title(), valid_description(), Status::ToDo).unwrap_err();
-        assert_eq!(error, "Title cannot be longer than 50 characters");
+        assert_eq!(error, "Title cannot be longer than 50 bytes");
     }
 
     #[test]
     fn description_cannot_be_longer_than_500_chars() {
         let error =
             Ticket::new(valid_title(), overly_long_description(), Status::ToDo).unwrap_err();
-        assert_eq!(error, "Description cannot be longer than 500 characters");
+        assert_eq!(error, "Description cannot be longer than 500 bytes");
     }
 }
