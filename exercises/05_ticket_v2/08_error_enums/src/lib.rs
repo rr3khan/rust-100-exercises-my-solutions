@@ -1,14 +1,30 @@
-// TODO: Use two variants, one for a title error and one for a description error.
+// Use two variants, one for a title error and one for a description error.
 //   Each variant should contain a string with the explanation of what went wrong exactly.
 //   You'll have to update the implementation of `Ticket::new` as well.
-enum TicketNewError {}
+#[derive(Debug)]
+enum TicketNewError {
+    TitleError(String),
+    DescriptionError(String),
+}
 
-// TODO: `easy_ticket` should panic when the title is invalid, using the error message
+// `easy_ticket` should panic when the title is invalid, using the error message
 //   stored inside the relevant variant of the `TicketNewError` enum.
 //   When the description is invalid, instead, it should use a default description:
 //   "Description not provided".
 fn easy_ticket(title: String, description: String, status: Status) -> Ticket {
-    todo!()
+    let easy_ticket = Ticket::new(title.clone(), description, status.clone());
+    let default_description = "Description not provided".to_string();
+
+    match easy_ticket {
+        Ok(ticket) => ticket,
+        Err(message) => match message {
+            TicketNewError::TitleError(err) => panic!("{}", err),
+            TicketNewError::DescriptionError(err) => {
+                return Ticket::new(title, default_description, status)
+                    .expect("Failed to create ticket with default description")
+            }
+        },
+    }
 }
 
 #[derive(Debug, PartialEq)]
@@ -32,16 +48,24 @@ impl Ticket {
         status: Status,
     ) -> Result<Ticket, TicketNewError> {
         if title.is_empty() {
-            return Err("Title cannot be empty".to_string());
+            return Err(TicketNewError::TitleError(
+                "Title cannot be empty".to_string(),
+            ));
         }
         if title.len() > 50 {
-            return Err("Title cannot be longer than 50 characters".to_string());
+            return Err(TicketNewError::TitleError(
+                "Title cannot be longer than 50 bytes".to_string(),
+            ));
         }
         if description.is_empty() {
-            return Err("Description cannot be empty".to_string());
+            return Err(TicketNewError::DescriptionError(
+                "Description cannot be empty".to_string(),
+            ));
         }
         if description.len() > 500 {
-            return Err("Description cannot be longer than 500 characters".to_string());
+            return Err(TicketNewError::DescriptionError(
+                "Description cannot be longer than 500 bytes".to_string(),
+            ));
         }
 
         Ok(Ticket {
@@ -70,7 +94,7 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "Title cannot be longer than 50 characters")]
+    #[should_panic(expected = "Title cannot be longer than 50 bytes")]
     fn title_cannot_be_longer_than_fifty_chars() {
         easy_ticket(overly_long_title(), valid_description(), Status::ToDo);
     }
