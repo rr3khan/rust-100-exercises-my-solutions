@@ -18,10 +18,10 @@ impl TryFrom<String> for Status {
     type Error = ConversionError;
     fn try_from(value: String) -> Result<Self, Self::Error> {
         match value.to_lowercase().as_str() {
-            "todo" => return Ok(Status::ToDo),
-            "inprogress" => return Ok(Status::InProgress),
-            "done" => return Ok(Status::Done),
-            _ => return Err(ConversionError::InvalidInput),
+            "todo" => Ok(Status::ToDo),
+            "inprogress" => Ok(Status::InProgress),
+            "done" => Ok(Status::Done),
+            _ => Err(ConversionError::InvalidInput),
         }
     }
 }
@@ -29,12 +29,7 @@ impl TryFrom<String> for Status {
 impl TryFrom<&str> for Status {
     type Error = ConversionError;
     fn try_from(value: &str) -> Result<Self, Self::Error> {
-        match value.to_lowercase().as_str() {
-            "todo" => return Ok(Status::ToDo),
-            "inprogress" => return Ok(Status::InProgress),
-            "done" => return Ok(Status::Done),
-            _ => return Err(ConversionError::InvalidInput),
-        }
+        Status::try_from(value.to_string())
     }
 }
 
