@@ -1,5 +1,42 @@
-// TODO: Implement `TryFrom<String>` and `TryFrom<&str>` for `Status`.
+//  Implement `TryFrom<String>` and `TryFrom<&str>` for `Status`.
 //  The parsing should be case-insensitive.
+
+#[derive(Debug)]
+enum ConversionError {
+    InvalidInput,
+}
+
+impl std::fmt::Display for ConversionError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match *self {
+            ConversionError::InvalidInput => write!(f, "Invalid input for Status"),
+        }
+    }
+}
+
+impl TryFrom<String> for Status {
+    type Error = ConversionError;
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        match value.to_lowercase().as_str() {
+            "todo" => return Ok(Status::ToDo),
+            "inprogress" => return Ok(Status::InProgress),
+            "done" => return Ok(Status::Done),
+            _ => return Err(ConversionError::InvalidInput),
+        }
+    }
+}
+
+impl TryFrom<&str> for Status {
+    type Error = ConversionError;
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        match value.to_lowercase().as_str() {
+            "todo" => return Ok(Status::ToDo),
+            "inprogress" => return Ok(Status::InProgress),
+            "done" => return Ok(Status::Done),
+            _ => return Err(ConversionError::InvalidInput),
+        }
+    }
+}
 
 #[derive(Debug, PartialEq, Clone)]
 enum Status {
