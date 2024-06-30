@@ -1,6 +1,5 @@
-use crate::status::ParseStatusError;
-use crate::status::Status;
-use std::error::Error;
+use crate::status::{ParseStatusError, Status};
+
 // We've seen how to declare modules in one of the earliest exercises, but
 // we haven't seen how to extract them into separate files.
 // Let's fix that now!
@@ -11,7 +10,7 @@ use std::error::Error;
 // In this case, `src/lib.rs`, thus `status.rs` should be placed in the `src` directory.
 mod status;
 
-// TODO: Add a new error variant to `TicketNewError` for when the status string is invalid.
+//   Add a new error variant to `TicketNewError` for when the status string is invalid.
 //   When calling `source` on an error of that variant, it should return a `ParseStatusError` rather than `None`.
 
 #[derive(Debug, thiserror::Error)]
@@ -24,29 +23,8 @@ pub enum TicketNewError {
     DescriptionCannotBeEmpty,
     #[error("Description cannot be longer than 500 characters")]
     DescriptionTooLong,
-    #[error("invalid_status` is not a valid status. Use one of: ToDo, InProgress, Done")]
-    InvalidStatus(ParseStatusError),
-}
-
-impl std::fmt::Display for TicketNewError {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match *self {
-            TicketNewError::InvalidStatus(_) => write!(
-                f,
-                "`invalid` is not a valid status. Use one of: ToDo, InProgress, Done"
-            ),
-            _ => write!(f, "Other error"),
-        }
-    }
-}
-
-impl Error for TicketNewError {
-    fn source(&self) -> Option<&(dyn Error + 'static)> {
-        match self {
-            TicketNewError::InvalidStatus(source) => Some(source),
-            _ => None,
-        }
-    }
+    #[error("{0}")]
+    InvalidStatus(#[from] ParseStatusError),
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -71,9 +49,7 @@ impl Ticket {
             return Err(TicketNewError::DescriptionTooLong);
         }
 
-        let status = Status::try_from(status).map_err(TicketNewError::InvalidStatus)?;
-
-        // TODO: Parse the status string into a `Status` enum.
+        let status = Status::try_from(status)?;
 
         Ok(Ticket {
             title,
