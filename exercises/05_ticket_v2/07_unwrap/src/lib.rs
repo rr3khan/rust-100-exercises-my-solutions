@@ -2,7 +2,28 @@
 //   When the description is invalid, instead, it should use a default description:
 //   "Description not provided".
 fn easy_ticket(title: String, description: String, status: Status) -> Ticket {
-    todo!()
+    let easy_ticket = Ticket::new(title.clone(), description.clone(), status.clone());
+    let default_description = "Description not provided".to_string();
+
+    match easy_ticket {
+        Ok(ticket) => return ticket,
+        Err(message) => match &message[..] {
+            "Title cannot be empty" => {
+                panic!("Title cannot be empty")
+            }
+            "Title cannot be longer than 50 bytes" => {
+                panic!("Title cannot be longer than 50 bytes")
+            }
+            "Description cannot be empty" | "Description cannot be longer than 500 bytes" => {
+                return Ticket {
+                    title,
+                    description: default_description,
+                    status,
+                }
+            }
+            &_ => panic!("Other Error"),
+        },
+    }
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -25,13 +46,13 @@ impl Ticket {
             return Err("Title cannot be empty".to_string());
         }
         if title.len() > 50 {
-            return Err("Title cannot be longer than 50 characters".to_string());
+            return Err("Title cannot be longer than 50 bytes".to_string());
         }
         if description.is_empty() {
             return Err("Description cannot be empty".to_string());
         }
         if description.len() > 500 {
-            return Err("Description cannot be longer than 500 characters".to_string());
+            return Err("Description cannot be longer than 500 bytes".to_string());
         }
 
         Ok(Ticket {
@@ -60,7 +81,7 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "Title cannot be longer than 50 characters")]
+    #[should_panic(expected = "Title cannot be longer than 50 bytes")]
     fn title_cannot_be_longer_than_fifty_chars() {
         easy_ticket(overly_long_title(), valid_description(), Status::ToDo);
     }
