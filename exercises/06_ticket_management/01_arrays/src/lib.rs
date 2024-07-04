@@ -15,16 +15,22 @@ pub enum Weekday {
     Sunday,
 }
 
+impl Weekday {
+    fn iter() -> impl Iterator<Item = Weekday> {
+        use Weekday::*;
+        vec![
+            Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday,
+        ]
+        .into_iter()
+    }
+}
+
 impl WeekTemperatures {
     pub fn new() -> Self {
         let mut new_week_temps = HashMap::new();
-        new_week_temps.insert(Weekday::Monday, None);
-        new_week_temps.insert(Weekday::Tuesday, None);
-        new_week_temps.insert(Weekday::Wednesday, None);
-        new_week_temps.insert(Weekday::Thursday, None);
-        new_week_temps.insert(Weekday::Friday, None);
-        new_week_temps.insert(Weekday::Saturday, None);
-        new_week_temps.insert(Weekday::Sunday, None);
+        for day in Weekday::iter() {
+            new_week_temps.insert(day, None);
+        }
 
         return WeekTemperatures {
             temperatures: new_week_temps,
