@@ -1,9 +1,10 @@
 //  Flesh out the `WeekTemperatures` struct and its method implementations to pass the tests.
-
+use std::collections::HashMap;
 pub struct WeekTemperatures {
-    temperatures: [Option<i32>; 7],
+    temperatures: HashMap<Weekday, Option<i32>>,
 }
 
+#[derive(Hash, Eq, PartialEq)]
 pub enum Weekday {
     Monday,
     Tuesday,
@@ -16,36 +17,26 @@ pub enum Weekday {
 
 impl WeekTemperatures {
     pub fn new() -> Self {
+        let mut new_week_temps = HashMap::new();
+        new_week_temps.insert(Weekday::Monday, None);
+        new_week_temps.insert(Weekday::Tuesday, None);
+        new_week_temps.insert(Weekday::Wednesday, None);
+        new_week_temps.insert(Weekday::Thursday, None);
+        new_week_temps.insert(Weekday::Friday, None);
+        new_week_temps.insert(Weekday::Saturday, None);
+        new_week_temps.insert(Weekday::Sunday, None);
+
         return WeekTemperatures {
-            temperatures: [None, None, None, None, None, None, None],
+            temperatures: new_week_temps,
         };
     }
 
     pub fn get_temperature(&self, day: Weekday) -> Option<i32> {
-        match day {
-            Weekday::Monday => return self.temperatures[0],
-            Weekday::Tuesday => return self.temperatures[1],
-            Weekday::Wednesday => return self.temperatures[2],
-            Weekday::Thursday => return self.temperatures[3],
-            Weekday::Friday => return self.temperatures[4],
-            Weekday::Saturday => return self.temperatures[5],
-            Weekday::Sunday => return self.temperatures[6],
-            _ => return None,
-        }
+        return self.temperatures.get(&day).cloned().unwrap_or(None);
     }
 
     pub fn set_temperature(&mut self, day: Weekday, temperature: i32) {
-        match day {
-            Weekday::Monday => self.temperatures[0] = Some(temperature),
-            Weekday::Tuesday => self.temperatures[1] = Some(temperature),
-            Weekday::Wednesday => self.temperatures[2] = Some(temperature),
-            Weekday::Thursday => self.temperatures[3] = Some(temperature),
-            Weekday::Friday => self.temperatures[4] = Some(temperature),
-            Weekday::Saturday => self.temperatures[5] = Some(temperature),
-            Weekday::Sunday => self.temperatures[6] = Some(temperature),
-        }
-
-        return;
+        self.temperatures.insert(day, Some(temperature));
     }
 }
 
