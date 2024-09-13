@@ -5,7 +5,8 @@
 //
 // You also need to add a `get` method that takes as input a `TicketId`
 // and returns an `Option<&Ticket>`.
-
+use rand::Rng;
+let mut rng = rand::thread_rng();
 use ticket_fields::{TicketDescription, TicketTitle};
 
 #[derive(Clone)]
@@ -44,8 +45,10 @@ impl TicketStore {
         }
     }
 
-    pub fn add_ticket(&mut self, ticket: Ticket) {
-        self.tickets.push(ticket);
+    pub fn add_ticket(&mut self, ticketDraft: TicketDraft) {
+        self.tickets.push(ticketDraft);
+        let id = TicketId(rng.gen());
+        return id;
     }
 }
 
