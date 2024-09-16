@@ -59,12 +59,7 @@ impl TicketStore {
     }
 
     pub fn get(&self, ticid: TicketId) -> Option<&Ticket> {
-        for tic in &self.tickets {
-            if tic.id == ticid {
-                return Some(&tic);
-            }
-        }
-        return None;
+        self.tickets.iter().find(|ticket| ticket.id == ticid)
     }
 }
 
